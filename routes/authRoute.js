@@ -62,28 +62,50 @@ router.post('/sendotp' , async (req,res) => {
 
 // login
 router.post('/login', async (req,res) => {
-    const {email, otp} = req.body;
+    try {
+        const {email, otp} = req.body;
+        const existinguser = await User.findOne({email:email})
+        
+        if (!existinguser) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
 
-    const existinguser = await User.findOne({email:email})
-    
-    if (!existinguser) {
-        return res.send("User not found");
-    }
+        if (existinguser.isLogin) {
+            return res.status(400).json({
+                success: false,
+                message: "Already logged in"
+            });
+        }
 
-    if (existinguser.isLogin) {
-        return res.send("Already logged in");
-    }
+        if (!existinguser.otp || existinguser.otp === "") {
+            return res.status(400).json({
+                success: false,
+                message: "OTP expired or invalid"
+            });
+        }
 
-    if (!existinguser.otp || existinguser.otp === "") {
-        return res.send("OTP expired or invalid");
-    }
-
-    if (existinguser.otp == otp) {
-        await User.findOneAndUpdate({email:email},{otp:"" , isLogin: true})
-        res.send('login successful')
-    }
-    else{
-        res.send('otp not matched')
+        if (existinguser.otp == otp) {
+            await User.findOneAndUpdate({email:email},{otp:"" , isLogin: true})
+            res.status(200).json({
+                success: true,
+                message: "login successful"
+            });
+        }
+        else{
+            res.status(400).json({
+                success: false,
+                message: "otp not matched"
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
     }
 })
 
