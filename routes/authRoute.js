@@ -111,25 +111,44 @@ router.post('/login', async (req,res) => {
 
 // logout
 router.post('/logout', async (req, res) => {
-    const { email } = req.body;
+    try {
+        const { email } = req.body;
 
-    if (!email) {
-        return res.send("Email is required");
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required"
+            });
+        }
+
+        const existinguser = await User.findOne({ email: email });
+
+        if (!existinguser) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        if (!existinguser.isLogin) {
+            return res.status(400).json({
+                success: false,
+                message: "User is already logged out"
+            });
+        }
+        
+        await User.findOneAndUpdate({ email: email }, { isLogin: false });
+        res.status(200).json({
+            success: true,
+            message: "logout successful"
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
     }
-
-    const existinguser = await User.findOne({ email: email });
-
-    if (!existinguser) {
-        return res.send("User not found");
-    }
-
-    if (!existinguser.isLogin) {
-        return res.send("User is already logged out");
-    }
-
-    await User.findOneAndUpdate({ email: email }, { isLogin: false });
-
-    res.send('logout successful');
 });
 
 
