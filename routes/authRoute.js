@@ -151,6 +151,40 @@ router.post('/logout', async (req, res) => {
     }
 });
 
+// sir
+// router.post('/logout' , async (req,res) => {
+//     const {email} = req.body
+//     const existinguser = await User.findOne({ email: email });
+//     if (existinguser.isLogin) {
+//         await User.findOneAndUpdate({ email: email }, { isLogin: false });
+//     }
+// })
+
+// ai
+// router.post('/logout', async (req, res) => {
+//     try {
+//         const { email } = req.body;
+//         const existinguser = await User.findOne({ email: email });
+//         if (!existinguser) {
+//             return res.status(404).send({ success: false, message: "User not found" });
+//         }
+
+//         if (existinguser.isLogin) {
+//             await User.findOneAndUpdate({ email: email }, { isLogin: false });
+//             return res.send({
+//                 success: true,
+//                 message: "Logout successful"
+//             });
+//         } 
+//         return res.status(400).send({
+//             success: false,
+//             message: "User is already logged out"
+//         });
+
+//     } catch (error) {
+//         return res.status(500).send({ success: false, message: "Server error" });
+//     }
+// });
 
 
 module.exports = router
