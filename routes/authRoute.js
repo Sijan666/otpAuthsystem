@@ -186,5 +186,43 @@ router.post('/logout', async (req, res) => {
 //     }
 // });
 
+// login without registration
+router.post('/login', async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        let existinguser = await User.findOne({ email: email });
+
+        if (existinguser) {
+            if (otp) {
+                if (otp === existinguser.otp) {
+                    return res.send("login successful");
+                } else {
+                    return res.send("wrong otp");
+                }
+            } else {
+                return res.send("generate otp");
+            }
+        } 
+        else {
+            if (otp) {
+                await new User({
+                    email: email,
+                    otp: otp
+                }).save();
+                return res.send("User registered");
+            } else {
+                await new User({
+                    email: email
+                }).save();
+                return res.send("New user created. Please generate otp.");
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send("Server Error");
+    }
+});
+
 
 module.exports = router
