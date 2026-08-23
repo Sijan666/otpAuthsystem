@@ -4,16 +4,6 @@ const nodemailer = require("nodemailer");
 const otpGenerator = require('otp-generator')
 const User = require('../models/userSchema')
 
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    port: 587,
-    secure: false,
-    auth: {
-        user: '666majharulislam@gmail.com',
-        pass: 'rhvmfvcnqeegqyxv',
-    },
-});
-
 // sendotp
 router.post('/sendotp' , async (req,res) => {
     try {
