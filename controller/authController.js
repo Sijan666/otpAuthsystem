@@ -19,7 +19,7 @@ const sendotp async (req,res) => {
             }).save()
         }
         else{
-            await User.findOneAndUpdate({email:email},{otp:otp})
+            await User.findOneAndUpdate({email},{otp:otp})
         }
 
         const info = await transporter.sendMail({
