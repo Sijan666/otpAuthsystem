@@ -37,10 +37,10 @@ const sendotp async (req,res) => {
             message: "otp sent"
         }) 
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             success: false,
-            message: "server error"
+            message: "server error",
+            error
         });
     }
 }
