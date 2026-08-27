@@ -10,7 +10,7 @@ const sendotp async (req,res) => {
         }
 
         const otp = otpGenerator.generate(6);
-        const existinguser = await User.findOne({email:email})
+        const existinguser = await User.findOne({email})
 
         if (!existinguser) {
             const user = await new User({
