@@ -1,6 +1,6 @@
 const User = require('../models/userSchema')
 
-// sendotp
+sendotp
 const sendotp async (req,res) => {
     try {
         const {email} = req.body
